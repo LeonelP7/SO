@@ -77,29 +77,22 @@ int main(int argc, char const *argv[]) {
         if (strcmp(buff, "fin") != 0) {
           write(fd1[0][1], buff, MAX_READ);
           printf("[%d]writes --> %s\n", getpid(), buff);
+
+          if ((nRead = read(fd1[3][0], buff, MAX_READ)) > 0) {
+            printf("[%d]reads <-- %s\n", getpid(), buff);
+          }
         } else {
           printf("End.\n");
-          break;
         }
       }
-
-      if (strcmp(buff,"fin") == 0)
-      {
-        break;
-      }
       
-
-      if ((nRead = read(fd1[3][0], buff, MAX_READ)) > 0) {
-        printf("[%d]reads <-- %s\n", getpid(), buff);
-      }
     } while (strcmp(buff, "fin") != 0);
 
     close(fd1[0][1]);
     close(fd1[3][0]);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
       wait(NULL);
     }
-
 
   } else {
     if (nivel == 1) {
@@ -141,6 +134,12 @@ int main(int argc, char const *argv[]) {
       wait(NULL);
 
     } else if (nivel == 2) {
+      for (int i = 0; i < 4; i++)
+      {
+        close(fd1[i][0]);
+        close(fd1[i][1]);
+      }
+      
 
       for (int i = 0; i < 2; i++)
       {
@@ -189,6 +188,16 @@ int main(int argc, char const *argv[]) {
       */
       wait(NULL);
     } else {
+
+      for (int i = 0; i < 4; i++)
+      {
+        close(fd1[i][0]);
+        close(fd1[i][1]);
+        if(i == 0 || i == 1){
+          close(fd2[i][0]);
+          close(fd2[i][1]);
+        }
+      }
 
       close(fd3[0][1]);
       close(fd3[1][0]);
