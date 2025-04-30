@@ -9,14 +9,11 @@
 #define MAX_READ 512
 
 int main(int argc, char const *argv[]) {
-  pid_t padre = getpid();
   int nProceso = 0;
   int fd1[3][2][2];
 
   char buff[MAX_READ];
   int nRead;
-
-  // int fd2[2][2];
 
   for (int i = 0; i < 2; i++) {
     pipe(fd1[i][0]);
@@ -131,7 +128,5 @@ int main(int argc, char const *argv[]) {
       close(fd1[2][1][1]);
     }
   }
-
-
   return 0;
 }
