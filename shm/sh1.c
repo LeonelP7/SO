@@ -45,12 +45,12 @@ int main(int argc, char const *argv[])
     
     size_t sizeMatrix = sizeof_dm(rows,cols,sizeof(double));
     int shmId = shmget(IPC_PRIVATE,sizeMatrix,IPC_CREAT|S_IRUSR | S_IWUSR);
+    m = shmat(shmId,NULL,0);
     create_index((void*)m,rows,cols,sizeof(double));
 
     if (!(hijo = fork()))
     {
         pause();
-        m = shmat(shmId,NULL,0);
         //printf("hola soy el hijo \n");
         for (int i = 0; i < rows; i++)
         {
@@ -67,7 +67,7 @@ int main(int argc, char const *argv[])
     else
     {
         //printf("hola soy el padre \n");
-        m = shmat(shmId,NULL, 0);
+        //m = shmat(shmId,NULL, 0);
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < cols; j++)
