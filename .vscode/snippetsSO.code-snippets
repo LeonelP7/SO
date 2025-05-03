@@ -27,5 +27,29 @@
 			"#include <sys/stat.h>"
 		],
 		"description": "Librerias para trabajar con shm"
-	}
+	},
+	"Matriz shm": {
+    "prefix": "matrizShm",
+    "body": [
+      "void create_index(void **m, int rows, int cols, size_t sizeElement)",
+      "{",
+      "    int i;",
+      "    size_t sizeRow = cols * sizeElement;",
+      "    m[0] = m + rows;",
+      "    for (i = 1; i < rows; i++)",
+      "    {",
+      "        m[i] = (m[i - 1] + sizeRow);",
+      "    }",
+      "}",
+      "",
+      "unsigned int sizeof_dm(int rows, int cols, size_t sizeElement)",
+      "{",
+      "    size_t size;",
+      "    size = rows * sizeof(void *);        // indexSize",
+      "    size += (cols * rows * sizeElement); // Data size",
+      "    return size;",
+      "}"
+    ],
+    "description": "Utilidad para crear una matriz en shm"
+  }
 }
