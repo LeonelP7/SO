@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
   }
 
   if (nProceso == 3) {
-    int read1, read2, read3;
+    int nRead;
     struct DatosMatriz datosC;
 
     for (int i = 0; i < 3; i++) {
@@ -51,20 +51,14 @@ int main(int argc, char const *argv[]) {
         wait(NULL);
     }
 
-    do {
-      read1 = read(fd[0][0], &datosC, sizeof(struct DatosMatriz));
-      if (read1 > 0) {
-        matrizC[datosC.x][datosC.y] = datosC.valor;
-      }
-      read2 = read(fd[1][0], &datosC, sizeof(struct DatosMatriz));
-      if (read2 > 0) {
-        matrizC[datosC.x][datosC.y] = datosC.valor;
-      }
-      read3 = read(fd[2][0], &datosC, sizeof(struct DatosMatriz));
-      if (read3 > 0) {
-        matrizC[datosC.x][datosC.y] = datosC.valor;
-      }
-    } while (read1 > 0 || read2 > 0 || read3 > 0);
+    for (int i = 0; i < 3; i++)
+    {
+        while (nRead = read(fd[i][0], &datosC, sizeof(struct DatosMatriz)) > 0)
+        {
+            matrizC[datosC.x][datosC.y] = datosC.valor;
+        }
+        
+    }
 
     printf("Matriz C:\n");
     for (int i = 0; i < rows; i++) {
