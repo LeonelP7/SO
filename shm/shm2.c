@@ -48,7 +48,7 @@ int main(int argc, char const *argv[]) {
     for (int j = 0; j < cols; j++) {
 
       matrizA[i][j] = (i * cols) + j;
-      matrizB[i][j] = ((i * cols) + j);
+      matrizB[i][j] = ((i * cols) + j) *2;
     }
   }
 
@@ -57,6 +57,15 @@ int main(int argc, char const *argv[]) {
     for (int j = 0; j < cols; j++) {
 
       printf("[%d]", matrizA[i][j]);
+    }
+    printf("\n");
+  }
+
+  printf("Matriz B:\n");
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+
+      printf("[%d]", matrizB[i][j]);
     }
     printf("\n");
   }
