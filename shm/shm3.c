@@ -82,9 +82,7 @@ int main(int argc, char const *argv[]) {
 
   int nHijos;
   int nProceso;
-  if (rowsA < colsB) {
-    nHijos = (int)ceil(((double)rowsA) / 2);
-  } else if (colsB < rowsA) {
+  if (colsB < rowsA) {
     nHijos = (int)ceil(((double)colsB) / 2);
   } else {
     nHijos = (int)ceil(((double)rowsA) / 2);
