@@ -117,9 +117,11 @@ int main(int argc, char const *argv[]) {
     shmctl(idC, IPC_RMID, NULL);
   } else if (nProceso != nHijos) {
     // printf("hola\n");
-    for (int i = nProceso; i < rowsA; i++) {
+    // printf("hola\n");
+    printf("nProceso: %d\n",nProceso);
+    for (int i = nProceso; i < (rowsA-nProceso); i++) {
       if (i == nProceso || i == ((rowsA - 1) - nProceso)) {
-        for (int j = 0; j < colsB; j++) {
+        for (int j = nProceso; j < (colsB-nProceso); j++) {
           // printf("hola\n");
 
           matrizC[i][j] = 0;
@@ -128,11 +130,15 @@ int main(int argc, char const *argv[]) {
           }
         }
       } else {
-        for (int j = nProceso; j < colsB; j += ((colsB - 1) - nProceso)) {
+        for (int j = nProceso; j < (colsB-nProceso); j += ((colsB - 1) - nProceso-(nProceso>0?1:0) )) {
+            printf("colsB: %d\n",colsB);
+            printf("j: %d\n",j);
           matrizC[i][j] = 0;
           for (int k = 0; k < colsA; k++) {
             matrizC[i][j] += matrizA[i][k] * matrizB[k][j];
           }
+          //j = 0;
+          
         }
       }
     }
