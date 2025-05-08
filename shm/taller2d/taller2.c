@@ -47,6 +47,11 @@ struct Estadistica {
 
 int main(int argc, char const *argv[]) {
 
+  /*
+  para correr el programa hay que hacerlo asi:
+  ./taller2 numeroDeHijos(lo correcto es al menos 2) nombreDelArchivo
+  */
+
   if (argc < 3) {
     return 1;
   }
