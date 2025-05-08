@@ -51,5 +51,44 @@
       "}"
     ],
     "description": "Utilidad para crear una matriz en shm"
-  }
+  },
+  "Leer caracteres y guardarlos en memoria compartida": {
+  "prefix": "leerChar",
+  "body": [
+    "void error(char *msg) {",
+    "  perror(msg);",
+    "  exit(-1);",
+    "}",
+    "",
+    "int leerChar(char *filename, char **vec) {",
+    "  int c, totalChar;",
+    "  char caracter;",
+    "  FILE *infile;",
+    "",
+    "  infile = fopen(filename, \"r\");",
+    "  if (!infile) {",
+    "    error(\"Error fopen\\n\");",
+    "  }",
+    "",
+    "  fscanf(infile, \"%d\", &totalChar);",
+    "",
+    "  idshm = shmget(IPC_PRIVATE, totalChar * sizeof(char), IPC_CREAT | 0600);",
+    "  *vec = shmat(idshm, NULL, 0);",
+    "  if (!*vec) {",
+    "    error(\"error calloc\");",
+    "  }",
+    "",
+    "  for (c = 0; c < totalChar; c++) {",
+    "    fscanf(infile, \"%c\", &caracter);",
+    "    (*vec)[c] = caracter;",
+    "    // printf(\"%c\\n\", (*vec)[c]);",
+    "  }",
+    "",
+    "  fclose(infile);",
+    "  return c;",
+    "}"
+  ],
+  "description": "Lee caracteres desde un archivo y los guarda en memoria compartida"
+}
+
 }
