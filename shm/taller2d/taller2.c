@@ -106,8 +106,6 @@ int main(int argc, char const *argv[]) {
 
     shmdt(vec);
     shmctl(idshm, IPC_RMID, NULL);
-
-
   } else if (nProceso == nHijos - 1) {  // el que cuenta
 
     for (int i = 0; i < nHijos; i++) {
@@ -173,8 +171,8 @@ int main(int argc, char const *argv[]) {
         close(fd[i][1]);
       }
     }
-    
-    int delta = nLeido / (nHijos-1);
+
+    int delta = nLeido / (nHijos - 1);
     int ini = delta * nProceso;
     int fin = ini + delta;
     char secuencia[7];
@@ -183,16 +181,15 @@ int main(int argc, char const *argv[]) {
       strncpy(secuencia, vec + i, 6);
       secuencia[7] = '\0';
       if (strcmp(secuencia, "GCGTGA") == 0) {
-        //printf("encontre\n");
+        // printf("encontre\n");
         write(fd[nProceso][1], &i, sizeof(int));
       } else {
         // printf("no encontre \n");
       }
     }
+
+    close(fd[nProceso][1]);
+    shmdt(vec);
   }
-
-  close(fd[nProceso][1]);
-  shmdt(vec);
-
   return 0;
 }
