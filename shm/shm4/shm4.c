@@ -22,7 +22,7 @@ void rellenarVect(int** v1, int** v2, int* shmid1, int* shmid2, int* tam,
   (*shmid2) = shmget(IPC_PRIVATE, (*tam) * sizeof(int), IPC_CREAT | 0600);
   (*v1) = shmat((*shmid1), NULL, 0);
   (*v2) = shmat((*shmid2), NULL, 0);
-  ;
+
   for (int i = 0; i < (*tam) * 2; i++) {
 
     fscanf(fp, "%d", (i > (*tam) - 1) ? &(*v2)[i - (*tam)] : &(*v1)[i]);
@@ -64,14 +64,9 @@ int main(int argc, char const* argv[]) {
   int ini = nProceso * delta;
   int fin = ((nProceso == nHijos) ? tamaño : ini + delta);
 
-  // printf("Resultado:\n");
   for (int i = ini; i < fin; i++) {
     resultado[i] = v1[i] * v2[i];
-    // printf("Resultado[%d] = %d\n",i,v1[i]);
   }
-
-//   shmdt(v1);
-//   shmdt(v2);
 
   if (nProceso == nHijos) {
     shmdt(v1);
@@ -85,7 +80,6 @@ int main(int argc, char const* argv[]) {
     for (size_t i = 0; i < tamaño; i++) {
       printf("[%d]\n", resultado[i]);
     }
-
 
     shmdt(resultado);
     shmctl(shmid1, IPC_RMID, NULL);
