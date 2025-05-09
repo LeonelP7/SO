@@ -9,24 +9,27 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-void rellenarVect(int** v1, int** v2, int* tam, char* filename) {
+void rellenarVect(int** v1, int** v2, int* shmid1, int* shmid2, int* tam,
+                  char* filename) {
   FILE* fp;
   fp = fopen(filename, "r");
   if (!fp) {
     perror("Error fopen\n");
   }
   fscanf(fp, "%d", tam);
-  (*v1) = malloc((*tam) * sizeof(int));
-  (*v2) = malloc((*tam) * sizeof(int));
+
+  (*shmid1) = shmget(IPC_PRIVATE, (*tam) * sizeof(int), IPC_CREAT | 0600);
+  (*shmid2) = shmget(IPC_PRIVATE, (*tam) * sizeof(int), IPC_CREAT | 0600);
+  (*v1) = shmat((*shmid1), NULL, 0);
+  (*v2) = shmat((*shmid2), NULL, 0);
+  ;
   for (int i = 0; i < (*tam) * 2; i++) {
 
-    fscanf(fp, "%d", (i > (*tam)-1) ? &(*v2)[i - (*tam)] : &(*v1)[i]);
+    fscanf(fp, "%d", (i > (*tam) - 1) ? &(*v2)[i - (*tam)] : &(*v1)[i]);
   }
-  for (int i = 0; i < (*tam); i++)
-  {
-    printf("v1[%d] v2[%d]\n",(*v1)[i],(*v2)[i]);
+  for (int i = 0; i < (*tam); i++) {
+    printf("v1[%d] v2[%d]\n", (*v1)[i], (*v2)[i]);
   }
-  
 }
 
 int main(int argc, char const* argv[]) {
@@ -45,12 +48,9 @@ int main(int argc, char const* argv[]) {
   char* filename = malloc(strlen(argv[2]) + 1);
   strcpy(filename, argv[2]);
 
-  rellenarVect(&v1, &v2, &tamaño, filename);
-  int shmid1 = shmget(IPC_PRIVATE, tamaño * sizeof(int), IPC_CREAT | 0600);
-  int shmid2 = shmget(IPC_PRIVATE, tamaño * sizeof(int), IPC_CREAT | 0600);
+  int shmid1 = 0, shmid2 = 0;
+  rellenarVect(&v1, &v2, &shmid1,&shmid2,&tamaño, filename);
   int shmid3 = shmget(IPC_PRIVATE, tamaño * sizeof(int), IPC_CREAT | 0600);
-  v1 = shmat(shmid1, (void*)v1, SHM_REMAP);
-  v2 = shmat(shmid2, (void*)v2, SHM_REMAP);
   resultado = shmat(shmid3, NULL, 0);
 
   int nProceso;
@@ -64,14 +64,14 @@ int main(int argc, char const* argv[]) {
   int ini = nProceso * delta;
   int fin = ((nProceso == nHijos) ? tamaño : ini + delta);
 
-  //printf("Resultado:\n");
+  // printf("Resultado:\n");
   for (int i = ini; i < fin; i++) {
     resultado[i] = v1[i] * v2[i];
-    //printf("Resultado[%d] = %d\n",i,v1[i]);
+    // printf("Resultado[%d] = %d\n",i,v1[i]);
   }
 
-  shmdt(v1);
-  shmdt(v2);
+//   shmdt(v1);
+//   shmdt(v2);
 
   if (nProceso == nHijos) {
     shmdt(v1);
@@ -82,11 +82,10 @@ int main(int argc, char const* argv[]) {
     }
 
     printf("Resultado:\n");
-    for (size_t i = 0; i < tamaño; i++)
-    {
-        printf("[%d]\n",v1[i]);
+    for (size_t i = 0; i < tamaño; i++) {
+      printf("[%d]\n", resultado[i]);
     }
-    
+
 
     shmdt(resultado);
     shmctl(shmid1, IPC_RMID, NULL);

@@ -61,7 +61,7 @@ int main(int argc, char const *argv[]) {
   printf("Matriz A:\n");
   for (int i = 0; i < rowsA; i++) {
     for (int j = 0; j < colsA; j++) {
-      printf("[%d] ", matrizA[i][j]);
+      printf("[%5d] ", matrizA[i][j]);
     }
     printf("\n");
   }
@@ -75,7 +75,7 @@ int main(int argc, char const *argv[]) {
   printf("Matriz B:\n");
   for (int i = 0; i < rowsB; i++) {
     for (int j = 0; j < colsB; j++) {
-      printf("[%d] ", matrizB[i][j]);
+      printf("[%5d] ", matrizB[i][j]);
     }
     printf("\n");
   }
@@ -87,8 +87,6 @@ int main(int argc, char const *argv[]) {
   } else {
     nHijos = (int)ceil(((double)rowsA) / 2);
   }
-
-  printf("n hijos:%d\n", nHijos);
 
   for (nProceso = 0; nProceso < nHijos; nProceso++) {
     if (!fork()) {
@@ -106,7 +104,7 @@ int main(int argc, char const *argv[]) {
     printf("Matriz C:\n");
     for (int i = 0; i < rowsA; i++) {
       for (int j = 0; j < colsB; j++) {
-        printf("[%d] ", matrizC[i][j]);
+        printf("[%5d] ", matrizC[i][j]);
       }
       printf("\n");
     }
@@ -116,13 +114,9 @@ int main(int argc, char const *argv[]) {
     shmctl(idB, IPC_RMID, NULL);
     shmctl(idC, IPC_RMID, NULL);
   } else if (nProceso != nHijos) {
-    // printf("hola\n");
-    // printf("hola\n");
-    printf("nProceso: %d\n",nProceso);
     for (int i = nProceso; i < (rowsA-nProceso); i++) {
       if (i == nProceso || i == ((rowsA - 1) - nProceso)) {
         for (int j = nProceso; j < (colsB-nProceso); j++) {
-          // printf("hola\n");
 
           matrizC[i][j] = 0;
           for (int k = 0; k < colsA; k++) {
@@ -131,14 +125,10 @@ int main(int argc, char const *argv[]) {
         }
       } else {
         for (int j = nProceso; j < (colsB-nProceso); j += ((colsB - 1) - nProceso-(nProceso>0?1:0) )) {
-            printf("colsB: %d\n",colsB);
-            printf("j: %d\n",j);
           matrizC[i][j] = 0;
           for (int k = 0; k < colsA; k++) {
             matrizC[i][j] += matrizA[i][k] * matrizB[k][j];
           }
-          //j = 0;
-          
         }
       }
     }
