@@ -25,6 +25,7 @@ int leerChar(char *filename, char **vec) {
     error("Error fopen\n");
   }
   fscanf(infile, "%d", &totalChar);
+  fgetc(infile);
   idshm = shmget(IPC_PRIVATE, totalChar * sizeof(char), IPC_CREAT | 0600);
   *vec = shmat(idshm, NULL, 0);
   if (!*vec) {
@@ -33,7 +34,6 @@ int leerChar(char *filename, char **vec) {
   for (c = 0; c < totalChar; c++) {
     fscanf(infile, "%c", &caracter);
     (*vec)[c] = caracter;
-    // printf("%c\n", (*vec)[c]);
   }
   fclose(infile);
   return c;
@@ -49,7 +49,7 @@ int main(int argc, char const *argv[]) {
 
   /*
   para correr el programa hay que hacerlo asi:
-  ./taller2 numeroDeHijos(lo correcto es al menos 2) nombreDelArchivo
+  ./taller2 numeroDeHijos (lo correcto es al menos 2) nombreDelArchivo
   */
 
   if (argc < 3) {
@@ -91,7 +91,6 @@ int main(int argc, char const *argv[]) {
       printf("%c: %d\n", buffE.letra, buffE.cantidad);
     }
 
-
     for (int i = 0; i < nHijos - 1; i++) {
       printf("\n");
       printf("Proceso [%d]:\n", i);
@@ -103,7 +102,6 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < nHijos; i++) {
       close(fd[i][0]);
     }
-
 
     for (int i = 0; i < nHijos; i++) {
       wait(NULL);
@@ -186,10 +184,7 @@ int main(int argc, char const *argv[]) {
       strncpy(secuencia, vec + i, 6);
       secuencia[7] = '\0';
       if (strcmp(secuencia, "GCGTGA") == 0) {
-        // printf("encontre\n");
         write(fd[nProceso][1], &i, sizeof(int));
-      } else {
-        // printf("no encontre \n");
       }
     }
 
