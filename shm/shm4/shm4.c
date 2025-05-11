@@ -41,7 +41,7 @@ int main(int argc, char const* argv[]) {
 
   int* v1 = NULL;
   int* v2 = NULL;
-  int* resultado = NULL;
+  int* resultado;
   int tamaño = 0;
 
   int nHijos = (int)strtol(argv[1], NULL, 10);
@@ -50,8 +50,9 @@ int main(int argc, char const* argv[]) {
 
   int shmid1 = 0, shmid2 = 0;
   rellenarVect(&v1, &v2, &shmid1,&shmid2,&tamaño, filename);
-  int shmid3 = shmget(IPC_PRIVATE, tamaño * sizeof(int), IPC_CREAT | 0600);
-  resultado = shmat(shmid3, NULL, 0);
+  int shmid3 = shmget(IPC_PRIVATE,sizeof(int), IPC_CREAT | 0600);
+  resultado = (int*)shmat(shmid3, NULL, 0);
+  *resultado = 0;
 
   int nProceso;
   for (nProceso = 0; nProceso < nHijos; nProceso++) {
@@ -65,7 +66,7 @@ int main(int argc, char const* argv[]) {
   int fin = ((nProceso == nHijos) ? tamaño : ini + delta);
 
   for (int i = ini; i < fin; i++) {
-    resultado[i] = v1[i] * v2[i];
+    *resultado += v1[i] * v2[i];
   }
 
   if (nProceso == nHijos) {
@@ -76,10 +77,10 @@ int main(int argc, char const* argv[]) {
       wait(NULL);
     }
 
-    printf("Resultado:\n");
-    for (size_t i = 0; i < tamaño; i++) {
-      printf("[%d]\n", resultado[i]);
-    }
+    printf("Resultado: %d\n",*resultado);
+    // for (size_t i = 0; i < tamaño; i++) {
+    //   printf("[%d]\n", resultado[i]);
+    // }
 
     shmdt(resultado);
     shmctl(shmid1, IPC_RMID, NULL);
