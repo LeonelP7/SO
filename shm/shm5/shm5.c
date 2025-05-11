@@ -9,7 +9,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-
 void create_index(void **m, int rows, int cols, size_t sizeElement) {
   int i;
   size_t sizeRow = cols * sizeElement;

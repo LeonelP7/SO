@@ -80,7 +80,7 @@ int main(int argc, char const *argv[]) {
     float anterior;
     float posterior;
 
-    for (int i = 1; i < nPasos+2; i++) {
+    for (int i = 1; i < nPasos+1; i++) {
       if ((nProceso - 1) < 0) {
         while (matriz[nPasos+1][nProceso + 1] < i) {
             //printf("Esperando al posterior\n");
