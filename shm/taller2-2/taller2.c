@@ -101,7 +101,9 @@ int main(int argc, char const *argv[]) {
         kill(idHjos[i], SIGUSR1);
       }
     }
-
+        for (int i = 0; i < nHijos; i++) {
+      close(tubs[i][0]);
+    }
 
   } else {
 
