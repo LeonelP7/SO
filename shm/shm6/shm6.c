@@ -1,28 +1,31 @@
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
-void create_index(void **m, int rows, int cols, size_t sizeElement) {
-  int i;
-  size_t sizeRow = cols * sizeElement;
-  m[0] = m + rows;
-  for (i = 1; i < rows; i++) {
-    m[i] = (m[i - 1] + sizeRow);
-  }
+void create_index(void **m, int rows, int cols, size_t sizeElement)
+{
+    int i;
+    size_t sizeRow = cols * sizeElement;
+    m[0] = m + rows;
+    for (i = 1; i < rows; i++)
+    {
+        m[i] = (m[i - 1] + sizeRow);
+    }
 }
 
-unsigned int sizeof_dm(int rows, int cols, size_t sizeElement) {
-  size_t size;
-  size = rows * sizeof(void *);         // indexSize
-  size += (cols * rows * sizeElement);  // Data size
-  return size;
+unsigned int sizeof_dm(int rows, int cols, size_t sizeElement)
+{
+    size_t size;
+    size = rows * sizeof(void *);        // indexSize
+    size += (cols * rows * sizeElement); // Data size
+    return size;
 }
 
 int main(int argc, char const *argv[]) {
@@ -105,3 +108,4 @@ int main(int argc, char const *argv[]) {
   }
   return 0;
 }
+
