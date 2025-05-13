@@ -114,7 +114,7 @@ int main(int argc, char const *argv[]) {
     shmctl(idShm2,IPC_RMID,NULL);
   } else {
 
-    for (int i = 0; i < nHijos; i++) {
+    for (int i = 0; i < nProceso+1; i++) {
       if (i == nProceso) {
         close(tubs[i][0]);
       } else {

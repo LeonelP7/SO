@@ -72,7 +72,7 @@ int main(int argc, char const *argv[]) {
 
   } else {
 
-    for (int i = 0; i < nHijos; i++) {
+    for (int i = 0; i < nProceso+1; i++) {
       if (i == nProceso) {
         close(fd[i][1][0]);
         close(fd[i][0][1]);
