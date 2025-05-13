@@ -88,7 +88,7 @@ int main(int argc, char const *argv[]) {
         read(tubs[i][0], &buffAux, sizeof(int));
       }
 
-      printf("Ronda %d:\n", k+1);
+      printf("Ronda %d:\n", k + 1);
       for (int i = 0; i < filas; i++) {
         for (int j = 0; j < cols; j++) {
           matriz[i][j] = matrizAux[i][j];
@@ -101,10 +101,16 @@ int main(int argc, char const *argv[]) {
         kill(idHjos[i], SIGUSR1);
       }
     }
-        for (int i = 0; i < nHijos; i++) {
+    for (int i = 0; i < nHijos; i++) {
       close(tubs[i][0]);
     }
-
+    for (int i = 0; i < nHijos; i++) {
+      wait(NULL);
+    }
+    shmdt(matriz);
+    shmdt(matrizAux);
+    shmctl(idShm,IPC_RMID,NULL);
+    shmctl(idShm2,IPC_RMID,NULL);
   } else {
 
     for (int i = 0; i < nHijos; i++) {
@@ -141,6 +147,7 @@ int main(int argc, char const *argv[]) {
               }
             }
           }
+          //--------------------------------------------------------------
           if (nProceso == 0) {
             if (matriz[i][j] == 0 && nExpuestos > 1) {
               matrizAux[i][j] = 1;
@@ -152,14 +159,17 @@ int main(int argc, char const *argv[]) {
               pVerificacion = 0.15 + (nVerificados * 0.05);
               verficado = ((float)rand() / RAND_MAX) < pVerificacion;
               matrizAux[i][j] = verficado ? 2 : 1;
-            } 
+            }
           }
+          //--------------------------------------------------------------
         }
       }
       write(tubs[nProceso][1], &k, sizeof(int));
       pause();
     }
     close(tubs[nProceso][1]);
+    shmdt(matriz);
+    shmdt(matrizAux);
   }
   return 0;
 }
