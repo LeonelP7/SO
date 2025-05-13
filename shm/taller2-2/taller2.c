@@ -64,6 +64,7 @@ int main(int argc, char const *argv[]) {
     }
     printf("\n");
   }
+  fclose(f);
 
   int nProceso;
   pid_t idHjos[nHijos];

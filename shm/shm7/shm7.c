@@ -68,6 +68,7 @@ int main(int argc, char const *argv[]) {
     }
     printf("\n");
   }
+  close(f);
 
   signal(SIGUSR1,manejador);
 

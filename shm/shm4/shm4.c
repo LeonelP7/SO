@@ -27,6 +27,7 @@ void rellenarVect(int** v1, int** v2, int* shmid1, int* shmid2, int* tam,
 
     fscanf(fp, "%d", (i > (*tam) - 1) ? &(*v2)[i - (*tam)] : &(*v1)[i]);
   }
+  close(fp);
   for (int i = 0; i < (*tam); i++) {
     printf("v1[%d] v2[%d]\n", (*v1)[i], (*v2)[i]);
   }

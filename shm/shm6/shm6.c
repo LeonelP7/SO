@@ -55,6 +55,7 @@ int main(int argc, char const *argv[]) {
     printf("vect[%4.1f] ", matriz[0][i]);
   }
   printf("\n");
+  close(f);
 
   int nProceso;
   for (nProceso = 0; nProceso < tam; nProceso++) {
