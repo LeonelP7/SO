@@ -50,6 +50,8 @@ int main(int argc, char const *argv[]) {
       }
     }
 
+    fclose(f);
+
     for (int i = 0; i < nHijos; i++) {
       close(fd[i][0][1]);
     }
