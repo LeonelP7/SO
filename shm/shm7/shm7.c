@@ -70,7 +70,7 @@ int main(int argc, char const *argv[]) {
   }
   close(f);
 
-  signal(SIGUSR1,manejador);
+  signal(SIGUSR1, manejador);
 
   int nProceso;
   int *idHijos = calloc(hijos, sizeof(pid_t));
@@ -102,23 +102,20 @@ int main(int argc, char const *argv[]) {
       padreMandando = 0;
     }
 
-    for (int i = 0; i < hijos; i++)
-    {
-        wait(NULL);
+    for (int i = 0; i < hijos; i++) {
+      wait(NULL);
     }
     shmdt(matrizAux);
     printf("Resultado:\n");
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            printf("[%4d]",matriz[i][j]);
-        }
-        printf("\n");
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        printf("[%4d]", matriz[i][j]);
+      }
+      printf("\n");
     }
     shmdt(matriz);
-    shmctl(idShm,IPC_RMID,NULL);
-    shmctl(idShm2,IPC_RMID,NULL);
+    shmctl(idShm, IPC_RMID, NULL);
+    shmctl(idShm2, IPC_RMID, NULL);
   } else {
     int delta = (int)ceil((float)rows / hijos);
     int ini = delta * nProceso;
@@ -132,10 +129,9 @@ int main(int argc, char const *argv[]) {
     int recuperado = 0;
     for (int diasP = 0; diasP < dias; diasP++) {
       for (int i = ini; i < fin; i++) {
-        vecInfectado = 0;
-        vecRecuperados = 0;
         for (int j = 0; j < cols; j++) {
-
+          vecInfectado = 0;
+          vecRecuperados = 0;
           // estos fors son lo que tiene al rededor m[i][j]
           for (int i2 = ((i - 1) < 0 ? 0 : i - 1);
                i2 < ((i + 2) >= rows ? rows : i + 2); i2++) {
@@ -159,10 +155,10 @@ int main(int argc, char const *argv[]) {
             recuperado = ((float)rand() / RAND_MAX) < pRecuperacion;
             if (recuperado) {
               matrizAux[i][j] = 2;
-            }else{
-                matrizAux[i][j] = 1;
+            } else {
+              matrizAux[i][j] = 1;
             }
-          }else {
+          } else {
             matrizAux[i][j] = matriz[i][j];
           }
         }
