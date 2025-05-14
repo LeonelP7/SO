@@ -1,0 +1,10 @@
+5
+5
+a o a h c
+o c a a o
+a h l d e
+h a o d e
+c o h d e
+2
+hola
+chao
