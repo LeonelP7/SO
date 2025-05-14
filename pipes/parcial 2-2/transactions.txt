@@ -1,0 +1,7 @@
+6
+TRX: user123 -> user999 : 500.0
+TRX: user420 -> user555 : 10000.0
+INVALID: this is a broken entry : 0
+TRX: admin -> chashout : 9999.0
+TRX: user101 -> user202 : 0
+TRX: hacker -> vault : 1000000.0
