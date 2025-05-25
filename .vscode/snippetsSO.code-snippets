@@ -118,6 +118,16 @@
       "}"
     ],
     "description": "Lee dos vectores desde archivo y los almacena en memoria compartida"
-  }
+  },
 
+  "Cabeceras para hilos posix": {
+    "prefix": "libspthreads",
+    "body": [
+      "#include <stdio.h>",
+      "#include <unistd.h>",
+      "#include <stdlib.h>",
+      "#include <pthread.h>"
+    ],
+    "description": "Librerias basicas para trabajar con hilos"
+  }
 }
