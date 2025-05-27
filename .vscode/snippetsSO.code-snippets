@@ -129,5 +129,15 @@
       "#include <pthread.h>"
     ],
     "description": "Librerias basicas para trabajar con hilos"
+  },
+
+  "pthread cond and mutex init": {
+    "prefix": "condMutexIni",
+    "body": [
+      "pthread_cond_t condSec = PTHREAD_COND_INITIALIZER;",
+      "pthread_cond_t condPpal = PTHREAD_COND_INITIALIZER;",
+      "pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;"
+    ],
+    "description": "Inicializa condiciones y mutex con pthread en C"
   }
 }
