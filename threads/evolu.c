@@ -13,7 +13,7 @@ typedef struct {
 Individuo *vect = NULL;
 int nHilos = 0, nIteraciones = 0, vectSize = 0;
 int terminados = 0;
-int max = 20, min = 1;
+int max_val = 20, min_val = 1;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t condSec = PTHREAD_COND_INITIALIZER;
 pthread_cond_t condPpal = PTHREAD_COND_INITIALIZER;
@@ -40,8 +40,8 @@ int main(int argc, char const *argv[]) {
 
   for (int i = 0; i < vectSize; i++) {
     Individuo *individuo = calloc(1, sizeof(Individuo));
-    individuo->f1 = (rand() % max) + min;
-    individuo->f2 = (rand() % max) + min;
+    individuo->f1 = (rand() % max_val) + min_val;
+    individuo->f2 = (rand() % max_val) + min_val;
     // printf("Individuo %d:\n",i);
     // printf("f1:%.2lf\n",individuo->f1);
     // printf("f2:%.2lf\n",individuo->f2);
@@ -91,8 +91,8 @@ void *funcionHilos(void *args) {
 
   for (int it = 0; it < nIteraciones; it++) {
     for (int i = ini; i < fin; i++) {
-      vect[i].f1 += (rand() % max) + min;
-      vect[i].f2 += (rand() % max) + min;
+      vect[i].f1 += (rand() % max_val) + min_val;
+      vect[i].f2 += (rand() % max_val) + min_val;
       vect[i].fitness = (vect[i].f1 * vect[i].f2) / 2;
     }
     //printf("Iteracion: %d\n",it);

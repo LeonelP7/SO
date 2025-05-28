@@ -4,12 +4,8 @@
 #include <unistd.h>
 
 int *vect = NULL;
-int vectSize = 0, min = 1, max = 0, intervalo, nHilos = 0, terminados = 0;
+int vectSize = 0, min_val = 1, max_val = 0, intervalo, nHilos = 0, terminados = 0;
 void *funcionHilos(void *args);
-
-// pthread_cond_t condSec = PTHREAD_COND_INITIALIZER;
-// pthread_cond_t condPpal = PTHREAD_COND_INITIALIZER;
-// pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef struct {
   int *vectR;
@@ -30,16 +26,22 @@ int main(int argc, char const *argv[]) {
 
   pthread_t *pidHilos = NULL;
   vectSize = (int)strtol(argv[1], NULL, 10);
-  max = (int)strtol(argv[2], NULL, 10);
+  max_val = (int)strtol(argv[2], NULL, 10);
   intervalo = (int)strtol(argv[3], NULL, 10);
-  nHilos = (max - min) / intervalo;
+  // nHilos = (max_val - min_val) / intervalo;
+  nHilos = (max_val - min_val + 1 + intervalo - 1) / intervalo;;
+  if (nHilos < 1) {
+    nHilos = 1;
+  }
+  printf("nHilos: %d\n", nHilos);
+
   vect = calloc(vectSize, sizeof(int));
   pidHilos = calloc(nHilos, sizeof(pthread_t));
   srand(time(NULL));
 
   printf("Vector inicial:\n");
   for (int i = 0; i < vectSize; i++) {
-    vect[i] = (rand() % (max - min + 1)) + min;
+    vect[i] = (rand() % (max_val - min_val + 1)) + min_val;
     printf("[%d] ", vect[i]);
   }
   printf("\n");
@@ -47,19 +49,14 @@ int main(int argc, char const *argv[]) {
   for (int i = 0; i < nHilos; i++) {
     int *args = calloc(1, sizeof(int));
     *args = i;
-    if(pthread_create(&pidHilos[i], NULL, funcionHilos, args)!= 0){
-        perror("error al crear hilos");
-        exit(EXIT_FAILURE);
+    if (pthread_create(&pidHilos[i], NULL, funcionHilos, args) != 0) {
+      perror("error al crear hilos");
+      exit(EXIT_FAILURE);
     }
   }
 
-  // while (terminados < nHilos)
-  // {
-  //     pthread_cond_wait(&condSec,NULL);
-  // }
-
   ResultadoH *resultado = NULL;
-  int k= 0;
+  int k = 0;
   for (int i = 0; i < nHilos; i++) {
     pthread_join(pidHilos[i], (void **)&resultado);
     for (int j = 0; j < resultado->vectRSize; j++) {
@@ -68,6 +65,7 @@ int main(int argc, char const *argv[]) {
     free(resultado->vectR);
     free(resultado);
   }
+  // printf("k en el principal %d\n",k);
 
   printf("Resultado: \n");
   for (int i = 0; i < vectSize; i++) {
@@ -77,46 +75,59 @@ int main(int argc, char const *argv[]) {
 
   free(vect);
   free(pidHilos);
-  //free(resultado);
 
   return EXIT_SUCCESS;
 }
 
 void *funcionHilos(void *args) {
-    printf("Hola\n");
   int inidice = (*(int *)args);
   free(args);
   ResultadoH *resultado = calloc(1, sizeof(ResultadoH));
   resultado->vectRSize = 0;
-  int hMin = (inidice * intervalo) + ((inidice + 1) * min);
-  int hMax = ((inidice + 1) * intervalo) + ((inidice + 1) * min);
-  if (hMax > max)
-  {
-    hMax = max;
-  }
-  
-  printf("minimo: %d y maximo %d\n", hMin, hMax);
+  // int hMin = (inidice * intervalo) + ((inidice + 1) * min);
+  // int hMax = ((inidice + 1) * intervalo) + ((inidice + 1) * min);
+  int hMin = min_val + (inidice * intervalo);
+  int hMax = hMin + intervalo - 1;
+  if (hMax > max_val) hMax = max_val;
+
+  printf("min: %d y max: %d\n", hMin, hMax);
 
   for (int i = 0; i < vectSize; i++) {
     if (vect[i] >= hMin && vect[i] <= hMax) {
       resultado->vectRSize++;
     }
   }
+  printf("vectRSize: %d\n", resultado->vectRSize);
   resultado->vectR = calloc(resultado->vectRSize, sizeof(int));
   int k = 0;
   for (int i = 0; i < vectSize; i++) {
     if (vect[i] >= hMin && vect[i] <= hMax) {
-      resultado->vectR[k++] = vect[i];
+      resultado->vectR[k] = vect[i];
+      k++;
     }
   }
+
+  printf("el hilo %d va a organizar: \n", inidice);
+  for (int i = 0; i < resultado->vectRSize; i++) {
+    printf("[%d] ", resultado->vectR[i]);
+  }
+  printf("\n");
+
   for (int i = 0; i < resultado->vectRSize - 1; i++) {
     for (int j = 0; j < resultado->vectRSize - i - 1; j++) {
-      if (resultado->vectR[j] > resultado->vectR[j+1]) {
+      if (resultado->vectR[j] > resultado->vectR[j + 1]) {
         int aux = resultado->vectR[j];
         resultado->vectR[j] = resultado->vectR[j + 1];
         resultado->vectR[j + 1] = aux;
       }
     }
   }
+
+  printf("el hilo %d organizo: \n", inidice);
+  for (int i = 0; i < resultado->vectRSize; i++) {
+    printf("[%d] ", resultado->vectR[i]);
+  }
+  printf("\n");
+
   pthread_exit((void *)resultado);
 }
