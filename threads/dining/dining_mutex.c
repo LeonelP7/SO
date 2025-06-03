@@ -31,6 +31,7 @@ int main(int argc, char const *argv[]) {
 
   free(pidThreads);
   free(forks);
+  pthread_mutex_destroy(&mutex);
   return EXIT_SUCCESS;
 }
 
@@ -38,39 +39,34 @@ void *functionThreads(void *args) {
   int me = *((int *)args);
   free(args);
   int nEat = 0;
-  //int ady = (me+1>=N_PHILO)?0:me+1;
   int ady = (me + 1) % N_PHILO;
   int haveR = 0, haveL = 0;
   while (nEat < N_EAT) {
     int segundos = rand() % 3 + 1;
-    printf("Philosopher %d is thinking\n",me+1);
+    printf("Philosopher %d is thinking\n", me + 1);
     sleep(segundos);
 
-    while (!(haveR && haveL))
-    {
-        pthread_mutex_lock(&mutex);
-        if (!haveL && !forks[me])
-        {
-            haveL = 1;
-            forks[me] = 1;
-            printf("Philosopher %d picked left fork\n",me+1);
-        }
+    while (!(haveR && haveL)) {
+      pthread_mutex_lock(&mutex);
+      if (!haveL && !forks[me]) {
+        haveL = 1;
+        forks[me] = 1;
+        printf("Philosopher %d picked left fork\n", me + 1);
+      }
 
-        if (!haveR && !forks[ady])
-        {
-            haveR = 1;
-            forks[ady] = 1;
-            printf("Philosopher %d picked right fork\n",me+1);
-        }
-        pthread_mutex_unlock(&mutex);
-        if (!(haveR && haveL))
-        {
-            usleep(1000);
-        }
+      if (!haveR && !forks[ady]) {
+        haveR = 1;
+        forks[ady] = 1;
+        printf("Philosopher %d picked right fork\n", me + 1);
+      }
+      pthread_mutex_unlock(&mutex);
+      if (!(haveR && haveL)) {
+        usleep(1000);
+      }
     }
-    
+
     segundos = rand() % 3 + 1;
-    printf("Philosopher %d is eating\n",me+1);
+    printf("Philosopher %d is eating\n", me + 1);
     sleep(segundos);
     nEat++;
     pthread_mutex_lock(&mutex);
