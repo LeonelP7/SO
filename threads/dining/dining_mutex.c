@@ -16,8 +16,12 @@ void *functionThreads(void *args);
 int main(int argc, char const *argv[]) {
 
   pthread_t *pidThreads = (pthread_t *)calloc(N_PHILO, sizeof(pthread_t));
+  clock_t tIni, tFin;
+  double secs = 0;
   forks = (int *)calloc(N_PHILO, sizeof(int));
   srand(time(NULL));
+
+  tIni = clock();
   for (int i = 0; i < N_PHILO; i++) {
     forks[i] = 0;
     int *arg = calloc(1, sizeof(int));
@@ -28,6 +32,9 @@ int main(int argc, char const *argv[]) {
   for (int i = 0; i < N_PHILO; i++) {
     pthread_join(pidThreads[i], NULL);
   }
+  tFin = clock();
+  secs = (double)(tFin-tIni)/CLOCKS_PER_SEC;
+  printf("Tiempo de ejecucion: %.16g\n",secs*1000);
 
   free(pidThreads);
   free(forks);

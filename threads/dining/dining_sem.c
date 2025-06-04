@@ -15,6 +15,8 @@ void *functionThreads(void *args);
 int main(int argc, char const *argv[]) {
 
   pthread_t *pidThreads = (pthread_t *)calloc(N_PHILO, sizeof(pthread_t));
+  clock_t tIni, tFin;
+  double secs = 0;
   semas = (sem_t *)calloc(N_PHILO, sizeof(sem_t));
   srand(time(NULL));
   for (int i = 0; i < N_PHILO; i++) {
@@ -23,11 +25,13 @@ int main(int argc, char const *argv[]) {
     pthread_create(&pidThreads[i], NULL, functionThreads, arg);
     sem_init(&semas[i], 0, 1);
   }
-
+  tIni = clock();
   for (int i = 0; i < N_PHILO; i++) {
     pthread_join(pidThreads[i], NULL);
   }
-
+  tFin = clock();
+  secs = (double)(tFin-tIni)/CLOCKS_PER_SEC;
+  printf("Tiempo de ejecucion: %.16g\n",secs*1000);
   for (int i = 0; i < N_PHILO; i++) {
     sem_destroy(&semas[i]);
   }
