@@ -50,6 +50,7 @@ int main(int argc, char const *argv[]) {
   files = (char **)calloc(nFiles, sizeof(char *));
   fgetc(f);
   for (int i = 0; i < nFiles; i++) {
+    free(files[i]);
     files[i] = (char *)calloc(MAX_BUFF, sizeof(char));
     fgets(files[i], MAX_BUFF, f);
     files[i][strcspn(files[i], "\n")] = EOL;
@@ -84,6 +85,7 @@ int main(int argc, char const *argv[]) {
 
     //printf("Archivo: %s\n", files[i]);
     for (int i = 0; i < nLineas; i++) {
+      free(vect[i].linea);
       vect[i].linea = (char *)calloc(MAX_BUFF, sizeof(char));
       fgets(vect[i].linea, MAX_BUFF, f);
       vect[i].linea[strcspn(vect[i].linea, "\n")] = EOL;
